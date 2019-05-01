@@ -5,9 +5,10 @@
  * Please read header file for more information
  ******************************************************************************
  */
-GSM::GSM( SoftwareSerial* serial ):
-	_serial(serial)
-{}
+GSM::GSM( SoftwareSerial& serial )
+{
+	_serial = &serial;
+}
 
 /*
  ******************************************************************************
@@ -124,79 +125,109 @@ void GSM::Clear_Buffer( void )
  * Please read header file for more information
  ******************************************************************************
  */
- bool GSM::TCP_Init( void )
- {
- 	bool return_val = false;
- 	if ( Send_Check_AT_Command( F("AT+CIPSHUT"), F("\r\nSHUT OK\r\n"), 2000 ) )
- 	{
- 		Serial.println( "Deactivate GPRS" );
- 	}
-
- 	if ( Send_Check_AT_Command( F("AT+CIPMODE=0"), OK_numeric ) )
- 	{
- 		Serial.println( "Non-Transparent mode enable" );
- 	}
- 	if ( Send_Check_AT_Command( F("AT+CSTT=\"imis/internet\",\"\",\"\""), OK_numeric ) )
- 	{
- 		Serial.println( "APN set" );
- 	}
- 	if ( Send_Check_AT_Command( F("AT+CIICR"), OK_numeric, 5000 ) )
- 	{
- 		Serial.println( "Connected to GPRS" );
- 	}
- 	return( return_val );
- }
-
-  /*
- ******************************************************************************
- * Please read header file for more information
- ******************************************************************************
- */
- bool GSM::TCP_Connect( void )
- {
- 	bool return_val = false;
- 	Get_IP();
-	if ( Send_Check_AT_Command( F("AT+CIPSTART=\"TCP\",\"m16.cloudmqtt.com\",\"12529\""),
-		F("0\r\n\r\nCONNECT OK\r\n"), 5000 ) )
+bool GSM::TCP_Init( void )
+{
+	bool return_val = false;
+	if ( Send_Check_AT_Command( F("AT+CIPSHUT"), F("\r\nSHUT OK\r\n"), 2000 ) )
 	{
-		Serial.println( "TCP Connection Established" );
+		Serial.println( "Deactivate GPRS" );
 	}
- 	return( return_val );
- }
 
- /*
- ******************************************************************************
- * Please read header file for more information
- ******************************************************************************
- */
- bool GSM::TCP_Close( void )
- {
- 	bool return_val = false;
- 	if ( Send_Check_AT_Command( F("AT+CIPCLOSE"), OK_numeric ) )
- 	{
- 		Serial.println( "TCP Connection Closed" );
- 	}
+	if ( Send_Check_AT_Command( F("AT+CIPMODE=0"), OK_numeric ) )
+	{
+		Serial.println( "Non-Transparent mode enable" );
+	}
+	if ( Send_Check_AT_Command( F("AT+CSTT=\"imis/internet\",\"\",\"\""), OK_numeric ) )
+	{
+		Serial.println( "APN set" );
+	}
+	if ( Send_Check_AT_Command( F("AT+CIICR"), OK_numeric, 5000 ) )
+	{
+		Serial.println( "Connected to GPRS" );
+	}
+	return( return_val );
+}
 
- 	if ( Send_Check_AT_Command( F("AT+CIPSHUT"), F("\r\nSHUT OK\r\n"), 2000 ) )
- 	{
- 		Serial.println( "Deactivate GPRS" );
- 	}
- 	return(return_val);
- }
+/*
+******************************************************************************
+* Please read header file for more information
+******************************************************************************
+*/
+bool GSM::TCP_Connect( void )
+{
+	bool return_val = false;
+	Get_IP();
+if ( Send_Check_AT_Command( F("AT+CIPSTART=\"TCP\",\"m16.cloudmqtt.com\",\"12529\""),
+	F("0\r\n\r\nCONNECT OK\r\n"), 5000 ) )
+{
+	Serial.println( "TCP Connection Established" );
+}
+	return( return_val );
+}
 
-  /*
- ******************************************************************************
- * Please read header file for more information
- ******************************************************************************
- */
- bool GSM::Get_IP( void )
- {
- 	bool return_val = false;
- 	if ( Send_Check_AT_Command( F("AT+CIFSR"), OK_numeric ) )
- 	{
- 		Serial.println( "IP allotted" );
- 		return_val = true;
- 	}
+/*
+******************************************************************************
+* Please read header file for more information
+******************************************************************************
+*/
+bool GSM::TCP_Close( void )
+{
+	bool return_val = false;
+	if ( Send_Check_AT_Command( F("AT+CIPCLOSE"), OK_numeric ) )
+	{
+		Serial.println( "TCP Connection Closed" );
+	}
 
- 	return(return_val);
- }
+	if ( Send_Check_AT_Command( F("AT+CIPSHUT"), F("\r\nSHUT OK\r\n"), 2000 ) )
+	{
+		Serial.println( "Deactivate GPRS" );
+	}
+	return(return_val);
+}
+
+/*
+******************************************************************************
+* Please read header file for more information
+******************************************************************************
+*/
+bool GSM::Get_IP( void )
+{
+	bool return_val = false;
+	if ( Send_Check_AT_Command( F("AT+CIFSR"), OK_numeric ) )
+	{
+		Serial.println( "IP allotted" );
+		return_val = true;
+	}
+
+	return(return_val);
+}
+
+/*
+******************************************************************************
+* Please read header file for more information
+******************************************************************************
+*/
+bool GSM::connected( void )
+{
+	bool return_val = false;
+	if ( Send_Check_AT_Command( F("AT+CIPSTATUS"), F("\r\nCONNECT OK\r\n") ) )
+	{
+		Serial.println( "Connection OK" );
+		return_val = true;
+	}
+	return( return_val );
+}
+
+/*
+******************************************************************************
+* Please read header file for more information
+******************************************************************************
+*/
+int GSM::connect(const char* domain, uint16_t port)
+{
+	int return_val = 1;
+	GSM_Init(3);
+	TCP_Init();
+	TCP_Connect();
+	return(return_val);
+}

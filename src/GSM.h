@@ -1,8 +1,9 @@
-#ifndef _GSM_H_
-#define _GSM_H_
+#ifndef GSM_H
+#define GSM_H
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
+#include <Client.h>
 
 #define OK_numeric F("0\r\n")
 #define OK_Alphabetic F("OK\r\n")
@@ -18,7 +19,7 @@ typedef const __FlashStringHelper *	FlashStringPtr;
 class GSM
 {
 	public:
-		GSM( SoftwareSerial* serial );
+		GSM( SoftwareSerial& serial );
 		bool GSM_Init( byte retry_count );
 		void SIM_Status();
 		bool TCP_Init();
@@ -26,6 +27,10 @@ class GSM
 		bool TCP_Close();
 		bool TCP_Send();
 		bool Get_IP();
+
+		/* client function */
+		bool connected();
+		int connect(const char* domain, uint16_t port);
 
 
 	private:
