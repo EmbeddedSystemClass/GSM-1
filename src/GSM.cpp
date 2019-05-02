@@ -207,7 +207,7 @@ bool GSM::Get_IP( void )
 * Please read header file for more information
 ******************************************************************************
 */
-bool GSM::connected( void )
+bool GSM::TCP_Connected( void )
 {
 	bool return_val = false;
 	if ( Send_Check_AT_Command( F("AT+CIPSTATUS"), F("\r\nCONNECT OK\r\n") ) )
@@ -216,18 +216,4 @@ bool GSM::connected( void )
 		return_val = true;
 	}
 	return( return_val );
-}
-
-/*
-******************************************************************************
-* Please read header file for more information
-******************************************************************************
-*/
-int GSM::connect(const char* domain, uint16_t port)
-{
-	int return_val = 1;
-	GSM_Init(3);
-	TCP_Init();
-	TCP_Connect();
-	return(return_val);
 }

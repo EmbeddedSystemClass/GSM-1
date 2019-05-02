@@ -27,10 +27,8 @@ class GSM
 		bool TCP_Close();
 		bool TCP_Send();
 		bool Get_IP();
+		bool TCP_Connected();
 
-		/* client function */
-		bool connected();
-		int connect(const char* domain, uint16_t port);
 
 
 	private:

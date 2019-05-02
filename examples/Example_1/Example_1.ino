@@ -1,8 +1,12 @@
-#include <GSM.h>
+#include <GSM_Client.h>
+#include <SoftwareSerial.h>
 
+SoftwareSerial mySerial(10, 11);
+GSM_Client client(mySerial);
+const char host[] = "www.sampleserver.com";
+uint16_t port = 1883;
 void setup() {
-  // put your setup code here, to run once:
-
+  client.connect( host, port );
 }
 
 void loop() {

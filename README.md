@@ -1,8 +1,10 @@
-# GSM-Playground Arduino Library
+# GSM Arduino Library
 This is a Arduino library for GSM device.
 
-## Build
-[![Build Status]]
-
 ## Hardware
-![GSM SIM800 module]
+
+GSM SIM800 module
+
+## License
+
+This code is released under the MIT License.
