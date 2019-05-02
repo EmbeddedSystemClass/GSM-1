@@ -149,10 +149,10 @@ bool GSM::TCP_Init( void )
 }
 
 /*
-******************************************************************************
-* Please read header file for more information
-******************************************************************************
-*/
+ ******************************************************************************
+ * Please read header file for more information
+ ******************************************************************************
+ */
 bool GSM::TCP_Connect( void )
 {
 	bool return_val = false;
@@ -166,30 +166,32 @@ if ( Send_Check_AT_Command( F("AT+CIPSTART=\"TCP\",\"m16.cloudmqtt.com\",\"12529
 }
 
 /*
-******************************************************************************
-* Please read header file for more information
-******************************************************************************
-*/
+ ******************************************************************************
+ * Please read header file for more information
+ ******************************************************************************
+ */
 bool GSM::TCP_Close( void )
 {
 	bool return_val = false;
 	if ( Send_Check_AT_Command( F("AT+CIPCLOSE"), OK_numeric ) )
 	{
 		Serial.println( "TCP Connection Closed" );
+		return_val = true;
 	}
 
 	if ( Send_Check_AT_Command( F("AT+CIPSHUT"), F("\r\nSHUT OK\r\n"), 2000 ) )
 	{
 		Serial.println( "Deactivate GPRS" );
+		return_val = true;
 	}
 	return(return_val);
 }
 
 /*
-******************************************************************************
-* Please read header file for more information
-******************************************************************************
-*/
+ ******************************************************************************
+ * Please read header file for more information
+ ******************************************************************************
+ */
 bool GSM::Get_IP( void )
 {
 	bool return_val = false;
@@ -203,10 +205,10 @@ bool GSM::Get_IP( void )
 }
 
 /*
-******************************************************************************
-* Please read header file for more information
-******************************************************************************
-*/
+ ******************************************************************************
+ * Please read header file for more information
+ ******************************************************************************
+ */
 bool GSM::TCP_Connected( void )
 {
 	bool return_val = false;
@@ -214,6 +216,25 @@ bool GSM::TCP_Connected( void )
 	{
 		Serial.println( "Connection OK" );
 		return_val = true;
+	}
+	return( return_val );
+}
+
+/*
+ ******************************************************************************
+ * Please read header file for more information
+ ******************************************************************************
+ */
+bool GSM::TCP_Send(const char* data)
+{
+	bool return_val = false;
+	if ( Send_Check_AT_Command( F("AT+CIPSEND"), F(">\r\n") ) )
+	{
+		if ( Send_Check_AT_Command( F(data), F("\r\nSEND OK\r\n") ) )
+		{
+			Serial.println( "Send Successful" );
+			return_val = true;
+		}
 	}
 	return( return_val );
 }

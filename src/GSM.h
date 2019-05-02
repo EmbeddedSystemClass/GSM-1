@@ -21,15 +21,13 @@ class GSM
 	public:
 		GSM( SoftwareSerial& serial );
 		bool GSM_Init( byte retry_count );
-		void SIM_Status();
+		void SIM_Status();	///< Implement
 		bool TCP_Init();
 		bool TCP_Connect();
 		bool TCP_Close();
-		bool TCP_Send();
+		bool TCP_Send(const char* data);
 		bool Get_IP();
 		bool TCP_Connected();
-
-
 
 	private:
 		static const byte BUFFER_SIZE = 64;
