@@ -10,8 +10,15 @@ class GSM_Client: public Client, public GSM {
 	    int connect(const char *host, uint16_t port);
 	    size_t write(uint8_t);
 	    size_t write(const uint8_t *buf, size_t size);
-	    virtual int available();
-	    virtual int read();
+	    inline int available( void )
+		{
+    		return( Data_Available() );
+		}
+	    inline int read( void )
+		{
+			return( TCP_Read() );
+		}
+
 	    virtual int read(uint8_t *buf, size_t size);
 	    virtual int peek();
 	    void flush();

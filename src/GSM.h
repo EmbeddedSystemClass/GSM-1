@@ -21,13 +21,28 @@ class GSM
 	public:
 		GSM( SoftwareSerial& serial );
 		bool GSM_Init( byte retry_count );
-		void SIM_Status();	///< Implement
-		bool TCP_Init();
+		void SIM_Status( void );	///< Implement
+		bool TCP_Init( void );
 		bool TCP_Connect( const char *host, uint16_t port );
-		bool TCP_Close();
+		bool TCP_Close( void );
 		bool TCP_Send(char* data, uint16_t len);
-		bool Get_IP();
-		bool TCP_Connected();
+		inline int TCP_Read( void )
+		{
+			if ( _serial->available() )
+			{
+				return( _serial->read() );
+			}
+			else
+			{
+				return(-1);
+			}
+		}
+		bool Get_IP( void );
+		bool TCP_Connected( void );
+		inline int Data_Available( void )
+		{
+			return( _serial->available() );
+		}
 
 	private:
 		static const byte BUFFER_SIZE = 64;
@@ -43,4 +58,4 @@ class GSM
 		bool Read_Check_Data( FlashStringPtr expected_reply );
 };
 
-#endif	// _GSM_H_
+#endif	// GSM_H
