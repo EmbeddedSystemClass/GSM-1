@@ -19,9 +19,15 @@ class GSM_Client: public Client, public GSM {
 			return( TCP_Read() );
 		}
 
-	    virtual int read(uint8_t *buf, size_t size);
-	    virtual int peek();
-	    void flush();
+	    virtual int read(uint8_t *buf, size_t size);	//< Do not implement
+	    inline int peek( void )
+		{
+			return( TCP_Peek() );
+		}
+	    inline void flush( void )
+		{
+			TCP_Flush();
+		}
 	    void stop();
 	    uint8_t connected();
 	    virtual operator bool();

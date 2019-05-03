@@ -27,9 +27,6 @@ void GSM_Client::stop()
     TCP_Close();
 }
 
-void GSM_Client::flush()
-{}
-
 size_t GSM_Client::write(uint8_t data)
 {
     size_t return_val = 0;    

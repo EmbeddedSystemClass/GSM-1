@@ -43,6 +43,14 @@ class GSM
 		{
 			return( _serial->available() );
 		}
+		inline void TCP_Flush( void )
+		{
+			_serial->flush();
+		}
+		inline int TCP_Peek( void )
+		{
+			return( _serial->peek() );
+		}
 
 	private:
 		static const byte BUFFER_SIZE = 64;
