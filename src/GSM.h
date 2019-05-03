@@ -23,7 +23,7 @@ class GSM
 		bool GSM_Init( byte retry_count );
 		void SIM_Status();	///< Implement
 		bool TCP_Init();
-		bool TCP_Connect();
+		bool TCP_Connect( const char *host, uint16_t port );
 		bool TCP_Close();
 		bool TCP_Send(char* data, uint16_t len);
 		bool Get_IP();

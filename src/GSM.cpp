@@ -190,15 +190,27 @@ bool GSM::TCP_Init( void )
  * Please read header file for more information
  ******************************************************************************
  */
-bool GSM::TCP_Connect( void )
+bool GSM::TCP_Connect( const char *host, uint16_t port )
 {
 	bool return_val = false;
 	Get_IP();
-	if ( Send_AT_Command( F("AT+CIPSTART=\"TCP\",\"m16.cloudmqtt.com\",\"12529\""),
-		F("0\r\n\r\nCONNECT OK\r\n"), 5000 ) )
+	_serial->print(F("AT+CIPSTART=\"TCP\",\""));
+  	_serial->print(host);
+  	_serial->print(F("\",\""));
+  	_serial->print(port);
+  	_serial->println(F("\""));
+
+	delay(5000);
+	if ( Read_Check_Data( F("0\r\n\r\nCONNECT OK\r\n") ) )
 	{
 		Serial.println( "TCP Connection Established" );
+		return_val = true;
 	}
+	// if ( Send_AT_Command( F("AT+CIPSTART=\"TCP\",\"m16.cloudmqtt.com\",\"12529\""),
+	// 	F("0\r\n\r\nCONNECT OK\r\n"), 5000 ) )
+	// {
+		
+	// }
 	return( return_val );
 }
 

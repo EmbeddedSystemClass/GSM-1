@@ -8,7 +8,7 @@ int GSM_Client::connect( const char *host, uint16_t port )
     int return_val = 1;
 	GSM_Init(3);
 	TCP_Init();
-	TCP_Connect();
+	TCP_Connect(host, port);
 	return(return_val);
 }
 
