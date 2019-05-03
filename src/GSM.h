@@ -25,7 +25,7 @@ class GSM
 		bool TCP_Init();
 		bool TCP_Connect();
 		bool TCP_Close();
-		bool TCP_Send(const char* data);
+		bool TCP_Send(char* data, uint16_t len);
 		bool Get_IP();
 		bool TCP_Connected();
 
@@ -34,9 +34,13 @@ class GSM
 		SoftwareSerial* _serial;
 		char _receive_buffer[BUFFER_SIZE];
 		void Clear_Buffer( void );
-		bool Send_Check_AT_Command( FlashStringPtr AT_command,
+		bool Send_AT_Command( FlashStringPtr AT_command,
 			FlashStringPtr expected_reply,
-			unsigned int delay_val = 0 );
+			unsigned int delay_time = 500 );
+		bool Send_AT_Command( char* AT_command, uint16_t len,
+			FlashStringPtr expected_reply,
+			unsigned int delay_time = 500 );
+		bool Read_Check_Data( FlashStringPtr expected_reply );
 };
 
 #endif	// _GSM_H_

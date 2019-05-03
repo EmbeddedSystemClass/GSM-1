@@ -30,23 +30,23 @@ void GSM_Client::stop()
 void GSM_Client::flush()
 {}
 
-size_t GSM_Client::write(uint8_t)
-{}
+size_t GSM_Client::write(uint8_t data)
+{
+    size_t return_val = 0;    
+    if ( TCP_Send(reinterpret_cast<char*>(&data), 1) )
+    {
+        return_val = 1;
+    }
+    return( return_val );
+}
 
 size_t GSM_Client::write(const uint8_t *buf, size_t size)
 {
-    size_t return_val = 0;
-    char* data = new char[size];
-    for (size_t counter = 0; counter < size; counter++ )
-    {
-        data[counter] = reinterpret_cast<char*>( buf[counter] );
-    }
-    
-    if ( TCP_Send(data) )
+    size_t return_val = 0;    
+    if ( TCP_Send(reinterpret_cast<char*>( const_cast<uint8_t*>(buf) ), size ) )
     {
         return_val = size;
     }
-    delete[] data;
     return( return_val );
 }
 
