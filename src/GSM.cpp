@@ -62,10 +62,11 @@ bool GSM::Read_Check_Data( FlashStringPtr expected_reply )
 	while ( ( _serial->available() > 0 ) && ( counter < BUFFER_SIZE ) )
 	{
 		_receive_buffer[counter] = _serial->read();
-		Serial.println(_receive_buffer[counter], HEX);
+		Serial.print(_receive_buffer[counter], HEX); Serial.print(" ");
 		++counter;
 		delay(1);
 	}
+	Serial.println();
 
 	data = String(_receive_buffer);	//< Convert to string object
 	#ifdef DEBUG
@@ -85,6 +86,7 @@ bool GSM::Read_Check_Data( FlashStringPtr expected_reply )
 		Serial.println("FAILED");
 		#endif
 	}
+	return(return_val);
 }
 
 /*
@@ -109,9 +111,6 @@ bool GSM::Send_AT_Command( FlashStringPtr AT_command, FlashStringPtr expected_re
 		return_val = true;
 	}
 
-	#ifdef DEBUG
-	Serial.println("/******************************************/");
-	#endif
 	return( return_val );
 }
 
@@ -128,18 +127,17 @@ bool GSM::Send_AT_Command( char* AT_command, uint16_t len, FlashStringPtr expect
 	#ifdef DEBUG
 	Serial.println("/******************************************/");
 	Serial.print("---> ");
-	Serial.println(AT_command);
+	Serial.write(AT_command, len);
+	Serial.println();
 	#endif
 	_serial->write( AT_command, len );
+	_serial->write(0x1A);
 	delay(delay_time);
 	if ( Read_Check_Data( expected_reply ) )
 	{
 		return_val = true;
 	}
 
-	#ifdef DEBUG
-	Serial.println("/******************************************/");
-	#endif
 	return( return_val );
 }
 
@@ -165,10 +163,7 @@ void GSM::Clear_Buffer( void )
 bool GSM::TCP_Init( void )
 {
 	bool return_val = false;
-	if ( Send_AT_Command( F("AT+CIPSHUT"), F("\r\nSHUT OK\r\n"), 2000 ) )
-	{
-		Serial.println( "Deactivate GPRS" );
-	}
+	TCP_Close();
 
 	if ( Send_AT_Command( F("AT+CIPMODE=0"), OK_numeric ) )
 	{
@@ -194,6 +189,16 @@ bool GSM::TCP_Connect( const char *host, uint16_t port )
 {
 	bool return_val = false;
 	Get_IP();
+	#ifdef DEBUG
+	Serial.println("/******************************************/");
+	Serial.print("---> ");
+	Serial.print(F("AT+CIPSTART=\"TCP\",\""));
+  	Serial.print(host);
+  	Serial.print(F("\",\""));
+  	Serial.print(port);
+  	Serial.println(F("\""));
+	#endif
+
 	_serial->print(F("AT+CIPSTART=\"TCP\",\""));
   	_serial->print(host);
   	_serial->print(F("\",\""));
@@ -206,11 +211,7 @@ bool GSM::TCP_Connect( const char *host, uint16_t port )
 		Serial.println( "TCP Connection Established" );
 		return_val = true;
 	}
-	// if ( Send_AT_Command( F("AT+CIPSTART=\"TCP\",\"m16.cloudmqtt.com\",\"12529\""),
-	// 	F("0\r\n\r\nCONNECT OK\r\n"), 5000 ) )
-	// {
-		
-	// }
+
 	return( return_val );
 }
 
@@ -222,7 +223,7 @@ bool GSM::TCP_Connect( const char *host, uint16_t port )
 bool GSM::TCP_Close( void )
 {
 	bool return_val = false;
-	if ( Send_AT_Command( F("AT+CIPCLOSE"), OK_numeric ) )
+	if ( Send_AT_Command( F("AT+CIPCLOSE"), F("\r\nCLOSE OK\r\n") ) )
 	{
 		Serial.println( "TCP Connection Closed" );
 		return_val = true;
@@ -261,7 +262,7 @@ bool GSM::Get_IP( void )
 bool GSM::TCP_Connected( void )
 {
 	bool return_val = false;
-	if ( Send_AT_Command( F("AT+CIPSTATUS"), F("\r\nCONNECT OK\r\n") ) )
+	if ( Send_AT_Command( F("AT+CIPSTATUS"), F("0\r\n\r\nSTATE: CONNECT OK\r\n") ) )
 	{
 		Serial.println( "Connection OK" );
 		return_val = true;
@@ -279,7 +280,7 @@ bool GSM::TCP_Send(char* data, uint16_t len)
 	bool return_val = false;
 	if ( Send_AT_Command( F("AT+CIPSEND"), F("\r\n> ") ) )
 	{
-		if ( Send_AT_Command( data, len, F("\r\nSEND OK\r\n") ), 3000 )
+		if ( Send_AT_Command( data, len, F("\r\nSEND OK\r\n"), 3000 ) )
 		{
 			Serial.println( "Send Successful" );
 			return_val = true;

@@ -49,5 +49,4 @@ size_t GSM_Client::write(const uint8_t *buf, size_t size)
 
 int GSM_Client::connect(IPAddress ip, uint16_t port){}
 int GSM_Client::read(uint8_t *buf, size_t size){}
-int GSM_Client::peek(){}
 GSM_Client::operator bool(){}

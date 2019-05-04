@@ -24,9 +24,14 @@ GSM_Init	KEYWORD2
 SIM_Status	KEYWORD2
 TCP_Init	KEYWORD2
 TCP_Connect KEYWORD2
+TCP_Connected	KEYWORD2
 TCP_Close	KEYWORD2
 TCP_Send	KEYWORD2
 Get_IP	KEYWORD2
+TCP_Read	KEYWORD2
+Data_Available	KEYWORD2
+TCP_Flush	KEYWORD2
+TCP_Peek	KEYWORD2
 
 ############################################
 # Constants
